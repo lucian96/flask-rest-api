@@ -9,7 +9,7 @@ blp = Blueprint("Items", __name__, description="Operations on stores")
 
 
 @blp.route("/item/<string:item_id>")
-class Store(MethodView):
+class Item(MethodView):
     def get(self, item_id):
         try:
             return items[item_id]
@@ -36,3 +36,26 @@ class Store(MethodView):
             return item
         except KeyError:
             abort(404, message="Item not found.")
+
+
+@blp.route("/item")
+class ItemList(MethodView):
+    def get(self):
+        return {"items": list(items.values())}
+
+    def post(self):
+        item_data = request.get_json()
+        # here we validate that the required field are filled in the request
+        # we also need to add data validation, for example, price must be a float
+        if "price" not in item_data or "store_id" not in item_data or "name" not in item_data:
+            abort(400, message="Bad request. Ensure 'price', 'store_id' and 'name' are included in the JSON payload")
+        # check if the item provided by the user already exists in the database
+        for item in items.values():
+            if item_data["name"] == item["name"] and item_data["store_id"] == item["store_id"]:
+                abort(400, message="Bad request. Item already exists.")
+
+        item_id = uuid.uuid4().hex
+        item = {**item_data, "id": item_id}
+        items[item_id] = item
+
+        return item
