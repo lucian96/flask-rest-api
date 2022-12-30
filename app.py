@@ -51,4 +51,3 @@ def get_item_in_store(name):
         if store["name"] == name:
             return {"items": store["items"]}
     return {"message": "Store not found"}, 404
-
