@@ -2,9 +2,11 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, \
+    jwt_required, get_jwt
 
 from db import db
+from blocklist import BLOCKLIST
 from models import UserModel
 from schemas import UserSchema
 
@@ -34,9 +36,28 @@ class UserLogin(MethodView):
         user = UserModel.query.filter(UserModel.username == user_data["username"]).first()
         if user and pbkdf2_sha256.verify(user_data["password"], user.password):
             # just an encoded string, not a hashed one - copy the token to https://jwt.io/ for decoding
-            access_token = create_access_token(identity=user.id)
-            return {"access_token": access_token}
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(identity=user.id)
+            return {"access_token": access_token, "refresh_token": refresh_token}
         abort(401, message="Invalid credentials.")
+
+
+@blp.route("/refresh")
+class TokenRefresh(MethodView):
+    @jwt_required(refresh=True)
+    def post(self):
+        current_user = get_jwt_identity()
+        new_token = create_access_token(identity=current_user, fresh=False)
+        return {"access_token": new_token}
+
+
+@blp.route("/logout")
+class UserLogout(MethodView):
+    @jwt_required()
+    def post(self):
+        jti = get_jwt()["jti"]
+        BLOCKLIST.add(jti)
+        return {"message": "Successfully logged out."}
 
 
 @blp.route("/user/<int:user_id>")
