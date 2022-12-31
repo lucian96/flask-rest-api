@@ -50,3 +50,10 @@ class TagAndItemSchema(Schema):
     message = fields.Str()
     item = fields.Nested(ItemSchema)
     tag = fields.Nested(TagSchema)
+
+
+class UserSchema(Schema):
+    id = store_id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    # VERY IMPORTANT to have load only, we MUST NOT send the password when the user ask for user info -> load_only
+    password = fields.Str(required=True, load_only=True)

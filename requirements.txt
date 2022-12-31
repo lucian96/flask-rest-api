@@ -3,3 +3,5 @@ flask-smorest==0.40.0
 python-dotenv==0.21.0
 sqlalchemy==1.4.45
 flask-sqlalchemy==3.0.2
+flask-jwt-extended==4.4.4
+passlib==1.7.4
