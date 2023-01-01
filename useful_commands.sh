@@ -11,6 +11,7 @@ docker run -it rest-api-flask-python /bin/bash
 
 # for running a container with exposed port 5005, mapped to 5000 and mapped external volume
 docker run -d -p 5005:5000 -w /app -v "$(pwd):/app" rest-api-flask-python
+# docker run -d -p 5005:5000 -w /app -v "$(pwd):/app" rest-api-flask-python sh -c "flask run"
 
 
 # flask commands
