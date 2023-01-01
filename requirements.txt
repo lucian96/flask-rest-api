@@ -1,7 +1,8 @@
-Flask==2.2.2
+flask==2.2.2
 flask-smorest==0.40.0
-python-dotenv==0.21.0
-sqlalchemy==1.4.45
-flask-sqlalchemy==3.0.2
 flask-jwt-extended==4.4.4
+flask-migrate==4.0.0
+flask-sqlalchemy==3.0.2
+sqlalchemy==1.4.45
+python-dotenv==0.21.0
 passlib==1.7.4
