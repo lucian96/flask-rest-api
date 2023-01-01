@@ -7,3 +7,4 @@ sqlalchemy==1.4.45
 python-dotenv==0.21.0
 passlib==1.7.4
 gunicorn==20.1.0
+psycopg2
