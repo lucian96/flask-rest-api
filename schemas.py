@@ -3,6 +3,9 @@ These schemas will appear in swagger in the schema section
 e.g. ItemSchema
 store_id = fields.Int -> int type in swagger schema
 tags = fields.List -> list/array type in swagger schema
+dump_only - sent only as a response(from server to the client)
+load_only - sent in the request methods(post, put - from the client to the server)
+required=True - mandatory field for both request and response
 """
 from marshmallow import Schema, fields
 
